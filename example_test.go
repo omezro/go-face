@@ -1,30 +1,36 @@
 package face_test
 
 import (
-	"fmt"
-	"log"
 	"path/filepath"
+	"testing"
 
 	"github.com/Kagami/go-face"
 )
 
 // Path to directory with models and test images. Here it's assumed it
 // points to the <https://github.com/Kagami/go-face-testdata> clone.
-const dataDir = "testdata"
+const dataDir = "/usr/local/goprogram/testdata"
 
 // This example shows the basic usage of the package: create an
 // recognizer, recognize faces, classify them using few known ones.
-func Example_basic() {
+func TestBase(t *testing.T) {
 	// Init the recognizer.
 	rec, err := face.NewRecognizer(filepath.Join(dataDir, "models"))
 	if err != nil {
-		log.Fatalf("Can't init face recognizer: %v", err)
+		t.Fatalf("Can't init face recognizer: %v", err)
 	}
 	// Free the resources when you're finished.
 	defer rec.Close()
 
+    singleImgPristin := filepath.Join(dataDir, "singleImg", "meiqi.jpg")    
+    face, err := rec.RecognizeSingleFile(singleImgPristin)
+    if err != nil {
+		t.Fatalf("Can't recognize: %v", err)
+	}
+    t.Logf("got image data: %+v", face)
+
 	// Test image with 10 faces.
-	testImagePristin := filepath.Join(dataDir, "images", "pristin.jpg")
+	/*testImagePristin := filepath.Join(dataDir, "images", "pristin.jpg")
 	// Recognize faces on that image.
 	faces, err := rec.RecognizeFile(testImagePristin)
 	if err != nil {
@@ -32,12 +38,12 @@ func Example_basic() {
 	}
 	if len(faces) != 10 {
 		log.Fatalf("Wrong number of faces")
-	}
+	}*/
 
 	// Fill known samples. In the real world you would use a lot of images
 	// for each person to get better classification results but in our
 	// example we just get them from one big image.
-	var samples []face.Descriptor
+	/*var samples []face.Descriptor
 	var cats []int32
 	for i, f := range faces {
 		samples = append(samples, f.Descriptor)
@@ -66,5 +72,5 @@ func Example_basic() {
 		log.Fatalf("Can't classify")
 	}
 	// Finally print the classified label. It should be "Nayoung".
-	fmt.Println(labels[catID])
+	fmt.Println(labels[catID])*/
 }
